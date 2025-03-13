@@ -4,7 +4,8 @@
 Rufus is an AI web-scraping agent designed to dynamically extract data from websites based on user-defined prompts and output it in structured formats for RAG (Retrieval-Augmented Generation) pipelines.
 
 **Core Features**:
-- Asynchronous web scraping to handle multiple tasks concurrently.
+- Uses spaCy NLP to extract content relevant to the prompt.
+- asynchronous web scraping to handle multiple tasks concurrently.
 - Dynamic content extraction based on the user’s prompt.
 - Supports crawling nested pages for deep scraping.
 - Synthesizes output into structured formats like JSON and plain text, ready for use in RAG pipelines.
@@ -24,8 +25,8 @@ Install Rufus and its dependencies using the following commands:
 
 ## Cloning the Repository
 ```bash
-git clone https://github.com/sanketchaudhary10/rufus-ai-tool.git
-cd rufus-ai-tool
+git clone https://github.com/sanketchaudhary10/Rufus-scraper-agent.git
+cd Rufus-scraper-agent
 ```
 
 ## Installing the required libraries
@@ -66,10 +67,11 @@ client = RufusAPI(api_key=api_key)
 instructions = "Extract application information for graduate students."
 
 async def main():
-    documents = await client.scrape("https://admissions.indiana.edu/apply/index.html", instructions)
+    documents = await client.scrape("https://www.amazon.com/s?k=iphone+15&crid=14V1QK01HSLTS&sprefix=iphone+15%2Caps%2C144&ref=nb_sb_noss_1", instructions, output_format="csv")
     print(documents)
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
 ```
 
 ## Integrating Rufus into a RAG Pipeline
