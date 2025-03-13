@@ -84,7 +84,7 @@ Rufus can easily integrate into any RAG pipeline by feeding the scraped data dir
 
 ```python
 {
-  "url": "https://example.com",
+  "url": "https://amazon.com",
   "title": "Product Reviews",
   "content": [
     "This is a five-star review...",
@@ -102,7 +102,7 @@ Rufus can easily integrate into any RAG pipeline by feeding the scraped data dir
 
 ```cpp
 URL,Title,Content
-https://example.com,Product Reviews,This is a five-star review...
+https://amazon.com,Product Reviews,This is a five-star review...
 ```
 
 ### Connecting Rufus to a Vector Database
