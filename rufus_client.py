@@ -28,8 +28,13 @@ class RufusClient:
         self.rate_limit = 5  # Time to wait between requests to avoid rate-limiting
 
     def _analyze_prompt(self, instructions):
+        
         doc = self.nlp(instructions)
-        keywords = [token.text for token in doc if token.pos_ in ['NOUN', 'PROPN', 'VERB']]
+        keywords = [
+            token.text for token in doc 
+            if token.pos_ in ['NOUN', 'PROPN', 'NUM', 'ADJ', 'DET'] and not token.is_stop and len(token.text) > 2
+        ]
+
         return keywords
 
 
