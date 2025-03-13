@@ -78,6 +78,50 @@ if __name__ == "__main__":
 
 Rufus can easily integrate into any RAG pipeline by feeding the scraped data directly into the system. Steps on implementing Rufus into an example RAG Model System:
 
+### JSON-Based Integration
+- Rufus outputs structured JSON files that can be indexed in a vector database.
+- Example JSON:
+
+```python
+{
+  "url": "https://example.com",
+  "title": "Product Reviews",
+  "content": [
+    "This is a five-star review...",
+    "Another review with five stars..."
+  ]
+}
+
+```
+- This structured format allows LLMs to retrieve relevant web data efficiently.
+
+
+### CSV-Based Integration
+- The CSV format can be used for data preprocessing before embedding into a vector DB.
+- Example:
+
+```cpp
+URL,Title,Content
+https://example.com,Product Reviews,This is a five-star review...
+```
+
+### Connecting Rufus to a Vector Database
+- Use ChromaDB, Weaviate, or Pinecone to store Rufus's output or any other Vector DB.
+- Example:
+
+```python
+import chromadb
+
+db = chromadb.PersistentClient(path="./vector_db")
+collection = db.get_or_create_collection("rufus_scraped_data")
+
+# Add extracted data to vector store
+collection.add(
+    ids=["doc1"],
+    documents=["This is a five-star review from Rufus output."]
+)
+```
+
 ### Example Integration
 Below is an example of how to use Rufus within a RAG system:
 
