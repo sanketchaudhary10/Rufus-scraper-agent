@@ -40,10 +40,10 @@ class RufusClient:
 
     async def scrape(self, url, instructions, output_format):
         try:
-            print("Initializing Playwright...")  
+            # print("Initializing Playwright...")  
 
             async with async_playwright() as p:
-                print("Launching browser...")  
+                # print("Launching browser...")  
                 browser = await p.chromium.launch(headless=True)
 
                 context = await browser.new_context(
@@ -51,36 +51,36 @@ class RufusClient:
                     viewport={"width": random.randint(1000, 1920), "height": random.randint(600, 1080)}
                 )
 
-                print("Opening new page...")
+                # print("Opening new page...")
                 page = await context.new_page()
 
-                print("Applying stealth mode manually...")  
+                # print("Applying stealth mode manually...")  
                 await page.add_init_script("""
                     Object.defineProperty(navigator, 'webdriver', {
                         get: () => undefined
                     });
                 """)
 
-                print(f"Navigating to: {url}")
+                # print(f"Navigating to: {url}")
                 await page.goto(url, timeout=10000)
                 await page.wait_for_timeout(5000)
 
-                print("Extracting page content...")
+                # print("Extracting page content...")
                 content = await page.content()
                 soup = parse_html(content)
 
-                print("Analyzing prompt...")
+                # print("Analyzing prompt...")
                 query = self._analyze_prompt(instructions)
                 print(f"Extracting based on query: {query}")
 
                 page_title = await page.title()
                 extracted_data = self._process_content(soup, query)
 
-                print("Following links...")
+                # print("Following links...")
                 nested_data = await self._follow_links(soup, url, query, context)
                 extracted_data.extend(nested_data)
 
-                print("Closing browser...")
+                # print("Closing browser...")
                 await browser.close()
                 print("Scraping completed successfully.")
 
@@ -93,15 +93,15 @@ class RufusClient:
 
     def _process_content(self, soup, query):
         """
-        Dynamically extract content from a webpage based on keywords from the query.
+        Dynamically extracts the content from a webpage based on keywords from the query.
         """
         data = []
         
-        # Iterate over common HTML elements
+        # Iterating over common HTML elements
         for tag in soup.find_all(['p', 'h1', 'h2', 'h3', 'span', 'div', 'li', 'table', 'td', 'form', 'input']):
             text = tag.get_text().strip().lower()
             
-            # Match any relevant keyword from the user query to select content
+            # Matching any relevant keyword from the user query to select content
             if any(keyword.lower() in text for keyword in query):
                 data.append(tag.get_text().strip())
         
@@ -109,7 +109,7 @@ class RufusClient:
 
     async def _follow_links(self, soup, base_url, query, context, max_links=5):
         """
-        Follow and scrape links to nested pages asynchronously using Playwright.
+        Follows and scrapes links to nested pages
         """
         nested_data = []
         links = soup.find_all('a', href=True)
@@ -124,7 +124,7 @@ class RufusClient:
             try:
                 await asyncio.sleep(self.rate_limit)
 
-                # Open a new page
+                # Opens a new page
                 page = await context.new_page()
                 await page.goto(nested_url)
                 await page.wait_for_timeout(3000)
@@ -145,7 +145,7 @@ class RufusClient:
 
     def _synthesize_document(self, url, title, content, output_format="json"):
         """
-        Synthesize the extracted content into a structured document format
+        Synthesizes the extracted content into a structured document format such as json or CSV based on the user's prompt
         """
         if output_format == "json":
             return self._save_json(ScrapedDocument(url=url, title=title, content=content))
@@ -156,20 +156,19 @@ class RufusClient:
 
     def _save_json(self, document: ScrapedDocument):
         """
-        Save the synthesized document in JSON format for use in RAG systems.
+        Saves the synthesized document in JSON format for easy integration into RAG systems.
         """
         output_dir = "extracted_data"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Generate a sanitized filename from the URL
         sanitized_url = re.sub(r'https?://', '', document.url)
         sanitized_url = re.sub(r'[^\w\-]', '_', sanitized_url)
 
         json_filename = f"scraped_data_{sanitized_url}.json"
         json_filepath = os.path.join(output_dir, json_filename)
         
-        # Save the data as JSON
+        # Saves the data as JSON
         with open(json_filepath, 'w') as json_file:
             json.dump(document.dict(), json_file, indent=4)
         
@@ -177,23 +176,23 @@ class RufusClient:
 
     def _save_csv(self, document: ScrapedDocument):
         """
-        Save the synthesized document in CSV format for use in RAG systems.
+        Saves the synthesized document in CSV format for easy integration into RAG systems.
         """
         output_dir = "extracted_data"
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
 
-        # Generate a sanitized filename from the URL
+        # Generates a sanitized filename from the URL
         sanitized_url = re.sub(r'https?://', '', document.url)
         sanitized_url = re.sub(r'[^\w\-]', '_', sanitized_url)
 
         csv_filename = f"scraped_data_{sanitized_url}.csv"
         csv_filepath = os.path.join(output_dir, csv_filename)
 
-        # Save the data as CSV
+        # Saves the data as CSV
         with open(csv_filepath, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.writer(csvfile)
-            writer.writerow(["URL", "Title", "Content"])  # CSV Headers
+            writer.writerow(["URL", "Title", "Content"])
 
             for line in document.content:
                 writer.writerow([document.url, document.title, line])

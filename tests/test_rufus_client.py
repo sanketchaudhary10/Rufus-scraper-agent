@@ -10,26 +10,26 @@ def test_empty_scrape():
     
     result = client.scrape(url, instructions)
     
-    # Assert that result is not None
+    # Asserts that result is not None
     assert result is not None, "Scrape result should not be None"
     
-    # Assert that the "data" field is empty (if the page doesn't have pricing details)
+    # Asserts that the "data" field is empty (if the page doesn't have pricing details)
     assert len(result['data']) == 0, "Data field should be empty if no matching content is found"
 
 
 def test_invalid_url():
     client = RufusClient()
     
-    # Provide an invalid or unreachable URL
+    # Provides an invalid or unreachable URL
     url = "https://chromeenterpris.google/"
     instructions = "Find contact information."
     
     result = client.scrape(url, instructions)
     
-    # Assert that the result is None due to invalid URL
+    # Asserts that the result is None due to invalid URL
     assert result is None, "Scrape result should be None for an invalid URL"
 
-# Test Function to Run Rufus with Different Prompts
+# Tests Function to Run Rufus with Different Prompts
 def test_rufus_scraping():
     client = RufusClient()
     
