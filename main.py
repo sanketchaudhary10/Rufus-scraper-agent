@@ -4,21 +4,21 @@ import os
 from dotenv import load_dotenv
 import asyncio
 
-# Load environment variables from the .env file
+# Loading environment variables from the .env file
 load_dotenv()
 
-# Access the environment variables
+# Accessing the environment variables
 api_key = os.getenv('RUFUS_API_KEY')
 
-# Initialize the Rufus API with the key
+# Initializing the Rufus API with the key
 client = RufusAPI(api_key=api_key)
 
-# Instructions for scraping
-instructions = "Find all the five star reviews for Apple iphone15 on Amazon"
+# Instructions/Prompts for scraping
+instructions = "Find all the information about Graduate Admissions page"
 
-# Scrape data from the URL asynchronously
+# Scraping data from the URL asynchronously
 async def main():
-    documents = await client.scrape("https://www.amazon.com/s?k=iphone+15&crid=14V1QK01HSLTS&sprefix=iphone+15%2Caps%2C144&ref=nb_sb_noss_1", instructions, output_format="csv")
+    documents = await client.scrape("https://ucsd.edu/admissions-aid/", instructions, output_format="json")
     print(documents)
 
 
