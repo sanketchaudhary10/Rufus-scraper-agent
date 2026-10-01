@@ -26,6 +26,7 @@ class RufusClient:
 
         self.nlp = load_nlp_model()
         self.rate_limit = 5  # Time to wait between requests to avoid rate-limiting
+        self.client = RufusClient(api_key=self.api_key)
 
     def _analyze_prompt(self, instructions):
         
