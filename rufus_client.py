@@ -61,7 +61,14 @@ class RufusClient:
                 """)
 
                 # print(f"Navigating to: {url}")
-                await page.goto(url, timeout=10000)
+                # Navigating to the requested page
+                await page.goto(
+                    url,
+                    timeout=30000,
+                    wait_until="domcontentloaded"
+                )
+
+                # Waiting briefly for dynamic content to load
                 await page.wait_for_timeout(5000)
 
                 # print("Extracting page content...")
