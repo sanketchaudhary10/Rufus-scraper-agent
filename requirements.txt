@@ -1,7 +1,9 @@
-beautifulsoup4 
-playwright 
-spacy 
-requests 
+beautifulsoup4
+playwright
+spacy
+requests
 pydantic
 python-dotenv
 playwright-stealth
+fastapi
+uvicorn
